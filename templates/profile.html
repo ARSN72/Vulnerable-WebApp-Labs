@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>User Profile</h2>
+    
+    <form method="POST">
+        <label>Username:</label>
+        <input type="text" name="username" value="{{ username }}" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ email }}" required>
+
+        <button type="submit">Update Profile</button>
+    </form>
+</div>
+{% endblock %}

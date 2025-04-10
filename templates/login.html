@@ -1,18 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
+
 {% block content %}
-<div class="container">
-    <h2>Login</h2>
-    <form method="POST" action="/login">
-        <label for="email">Email:</label>
-        <input type="email" name="email" required>
-
-        <label for="password">Password:</label>
-        <input type="password" name="password" required>
-
-        <button type="submit">Login</button>
-    </form>
-
-    <p>Don't have an account? <a href="/signup">Register here</a></p>
-</div>
+<h2>Login</h2>
+<form action="/login" method="POST">
+    <input type="text" name="username" placeholder="Enter your username" required>
+    <input type="password" name="password" placeholder="Enter your password" required>
+    <button type="submit">Login</button>
+</form>
 {% endblock %}

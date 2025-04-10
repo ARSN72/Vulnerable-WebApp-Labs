@@ -1,17 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
-{% block content %}
-<div class="container">
-    <h2>Welcome, {{ session['username'] }}!</h2>
-    <p>This is your dashboard. Use the options below to navigate.</p>
 
-    <div class="dashboard-buttons">
-        <a href="/profile" class="btn">Edit Profile</a>
-        <a href="/feed" class="btn">View Feed</a>
-        <a href="/gallery" class="btn">Your Gallery</a>
-        <a href="/create-post" class="btn">Create a Post</a>
-        <a href="/change-password" class="btn">Change Password</a>
-        <a href="/logout" class="btn logout">Logout</a>
-    </div>
-</div>
+{% block content %}
+<h2>Welcome, {{ username }}</h2>
+<p>Navigate using the header above.</p>
 {% endblock %}

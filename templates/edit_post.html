@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Post</h2>
+
+<form method="POST">
+    <label for="content">Edit Post Content:</label>
+    <textarea id="content" name="content">{{ post['content'] }}</textarea>
+    
+    {% if post['image'] %}
+        <p>Current Image:</p>
+        <img src="{{ url_for('static', filename='uploads/' ~ post['image']) }}" class="edit-image">
+        <label><input type="checkbox" name="remove_image"> Remove Image</label>
+    {% endif %}
+    
+    <button type="submit">Update Post</button>
+</form>
+
+<a href="{{ url_for('gallery') }}">Back to Gallery</a>
+
+{% endblock %}

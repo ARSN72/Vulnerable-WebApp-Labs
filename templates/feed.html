@@ -1,21 +1,23 @@
 {% extends "base.html" %}
-{% block title %}Feed{% endblock %}
-{% block content %}
-<div class="container">
-    <h2>Community Feed</h2>
 
-    <h3>Posts</h3>
+{% block content %}
+<h2>Feed</h2>
+
+<div class="feed-container">
     {% for post in posts %}
         <div class="post">
-            <strong>{{ post["username"] }}</strong>: {{ post["content"] }}
+            <div class="post-header">
+                <strong>{{ post['username'] }}</strong> 
+                <span class="timestamp">{{ post['timestamp'] }}</span>
+            </div>
+            <p class="post-caption">{{ post['content'] }}</p>
+            {% if post['image'] %}
+                <div class="post-image-container">
+                    <img src="{{ url_for('static', filename='uploads/' ~ post['image']) }}" alt="Uploaded Image" class="post-image">
+                </div>
+            {% endif %}
         </div>
     {% endfor %}
-
-    <h3>Uploaded Images</h3>
-    <div class="gallery">
-        {% for file in files %}
-            <img src="{{ url_for('static', filename='uploads/' + file) }}" alt="User Upload">
-        {% endfor %}
-    </div>
 </div>
+
 {% endblock %}

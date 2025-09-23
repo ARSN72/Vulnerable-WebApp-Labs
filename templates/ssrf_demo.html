@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🌐 SSRF (Server-Side Request Forgery) Demo</h2>
+    <p>Learn how attackers can make the server request internal resources</p>
+</div>
+
+<div class="vulnerability-demo">
+    <div class="demo-card">
+        <div class="demo-header">
+            <h3>🎯 SSRF Attack Simulation</h3>
+            <span class="difficulty">Difficulty: ⭐⭐⭐⭐</span>
+        </div>
+        
+        <div class="demo-content">
+            <p><strong>What is SSRF?</strong> SSRF allows attackers to make the server send requests to internal resources that should not be accessible from outside.</p>
+            
+            <div class="hint-section">
+                <h4>💡 How SSRF Works:</h4>
+                <ol>
+                    <li>Application accepts user input for URLs</li>
+                    <li>Server makes request to user-provided URL</li>
+                    <li>No validation of target URL</li>
+                    <li>Attacker can access internal services</li>
+                </ol>
+            </div>
+            
+            <div class="demo-form">
+                <h4>🔧 SSRF Attack Demo</h4>
+                <p>This form will fetch any URL you provide - try internal addresses!</p>
+                
+                <form action="/ssrf-demo" method="POST">
+                    <div class="form-group">
+                        <label for="url">Enter URL to fetch:</label>
+                        <input type="url" name="url" id="url" placeholder="http://example.com" required>
+                    </div>
+                    <button type="submit">🌐 Fetch URL (No Validation!)</button>
+                </form>
+            </div>
+            
+            <div class="payload-examples">
+                <h4>🔧 SSRF Attack Examples:</h4>
+                <div class="payload-grid">
+                    <div class="payload-item">
+                        <strong>Internal Services:</strong><br>
+                        <code>http://localhost:22</code><br>
+                        <code>http://127.0.0.1:3306</code><br>
+                        <code>http://169.254.169.254/</code>
+                    </div>
+                    <div class="payload-item">
+                        <strong>Cloud Metadata:</strong><br>
+                        <code>http://169.254.169.254/latest/meta-data/</code><br>
+                        <code>http://metadata.google.internal/</code>
+                    </div>
+                    <div class="payload-item">
+                        <strong>File System:</strong><br>
+                        <code>file:///etc/passwd</code><br>
+                        <code>file:///etc/hosts</code>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="protection-tips">
+                <h4>🛡️ How to Prevent SSRF:</h4>
+                <ul>
+                    <li>Validate and whitelist allowed URLs</li>
+                    <li>Block private IP ranges (127.0.0.1, 10.0.0.0/8, etc.)</li>
+                    <li>Use URL parsing libraries carefully</li>
+                    <li>Implement network segmentation</li>
+                    <li>Disable unnecessary protocols (file://, ftp://)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

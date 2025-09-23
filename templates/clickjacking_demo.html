@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🖱️ Clickjacking Attack Demo</h2>
+    <p>Learn how attackers trick users into clicking hidden elements</p>
+</div>
+
+<div class="vulnerability-demo">
+    <div class="demo-card">
+        <div class="demo-header">
+            <h3>🎯 Clickjacking Attack Simulation</h3>
+            <span class="difficulty">Difficulty: ⭐⭐</span>
+        </div>
+        
+        <div class="demo-content">
+            <p><strong>What is Clickjacking?</strong> Clickjacking tricks users into clicking on hidden or disguised elements by overlaying them with attractive content.</p>
+            
+            <div class="hint-section">
+                <h4>💡 How Clickjacking Works:</h4>
+                <ol>
+                    <li>Attacker creates a malicious website</li>
+                    <li>Embeds target site in invisible iframe</li>
+                    <li>Overlays attractive content on top</li>
+                    <li>User clicks on overlay, but hits hidden button</li>
+                </ol>
+            </div>
+            
+            <div class="demo-iframe">
+                <h4>🔧 Clickjacking Demo</h4>
+                <p>This iframe shows how a vulnerable site can be embedded and overlaid:</p>
+                
+                <div class="iframe-container">
+                    <iframe src="/profile" width="100%" height="300" style="border: 1px solid #ccc; opacity: 0.3;"></iframe>
+                    <div class="overlay-content">
+                        <h3>🎁 Click Here for Free Gift!</h3>
+                        <p>You've won a $1000 gift card!</p>
+                        <button class="overlay-button">Claim Now!</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="payload-examples">
+                <h4>🔧 Clickjacking Attack Code:</h4>
+                <code>&lt;div style="position: relative;"&gt;<br>
+                &nbsp;&nbsp;&lt;iframe src="http://vulnerable-site.com/profile" style="opacity: 0.1;"&gt;&lt;/iframe&gt;<br>
+                &nbsp;&nbsp;&lt;div style="position: absolute; top: 100px; left: 50px;"&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Click for Free Gift!&lt;/h1&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;button&gt;Claim Now!&lt;/button&gt;<br>
+                &nbsp;&nbsp;&lt;/div&gt;<br>
+                &lt;/div&gt;</code>
+            </div>
+            
+            <div class="protection-tips">
+                <h4>🛡️ How to Prevent Clickjacking:</h4>
+                <ul>
+                    <li>Use X-Frame-Options header (DENY or SAMEORIGIN)</li>
+                    <li>Implement Content Security Policy (CSP) frame-ancestors</li>
+                    <li>Use JavaScript frame-busting techniques</li>
+                    <li>Require user confirmation for sensitive actions</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

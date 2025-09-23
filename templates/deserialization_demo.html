@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🔓 Insecure Deserialization Demo</h2>
+    <p>Learn how deserializing untrusted data can lead to code execution</p>
+</div>
+
+<div class="vulnerability-demo">
+    <div class="demo-card">
+        <div class="demo-header">
+            <h3>🎯 Deserialization Attack Simulation</h3>
+            <span class="difficulty">Difficulty: ⭐⭐⭐⭐⭐</span>
+        </div>
+        
+        <div class="demo-content">
+            <p><strong>What is Insecure Deserialization?</strong> Deserializing untrusted data can lead to code execution, privilege escalation, and other attacks.</p>
+            
+            <div class="hint-section">
+                <h4>💡 How Deserialization Attacks Work:</h4>
+                <ol>
+                    <li>Application deserializes user-controlled data</li>
+                    <li>No validation of serialized objects</li>
+                    <li>Malicious objects execute during deserialization</li>
+                    <li>Attacker gains code execution</li>
+                </ol>
+            </div>
+            
+            <div class="demo-form">
+                <h4>🔧 Deserialization Attack Demo</h4>
+                <p>This form deserializes data without validation - try malicious payloads!</p>
+                
+                <form action="/deserialization-demo" method="POST">
+                    <div class="form-group">
+                        <label for="serialized_data">Enter Base64 encoded serialized data:</label>
+                        <textarea name="serialized_data" id="serialized_data" rows="4" placeholder="Enter base64 encoded data..." required></textarea>
+                    </div>
+                    <button type="submit">🔓 Deserialize Data (No Validation!)</button>
+                </form>
+            </div>
+            
+            <div class="payload-examples">
+                <h4>🔧 Deserialization Attack Examples:</h4>
+                <div class="payload-section">
+                    <h5>Safe Test Payload:</h5>
+                    <code>gASVKwAAAAAAAACMBGxpc3SUjAJhYpSMBGJjY5SMBGNkZJSMBGRlZmWUcwpS</code>
+                    <p><em>This creates a simple list: ['a', 'b', 'c', 'd', 'e']</em></p>
+                </div>
+                
+                <div class="payload-section">
+                    <h5>Dangerous Payload (Code Execution):</h5>
+                    <code>Y3Bvc2l4CmdldHB3ZApwMQou</code>
+                    <p><em>This executes: os.system('id')</em></p>
+                </div>
+                
+                <div class="payload-section">
+                    <h5>File Read Payload:</h5>
+                    <code>Y3Bvc2l4Cm9wZW4KcDEKKFMnL2V0Yy9wYXNzd2QnLCAncicpCnAyCnRzCnAzCnJ0cwpwNAp0cwpwNQou</code>
+                    <p><em>This reads /etc/passwd file</em></p>
+                </div>
+            </div>
+            
+            <div class="protection-tips">
+                <h4>🛡️ How to Prevent Insecure Deserialization:</h4>
+                <ul>
+                    <li>Avoid deserializing untrusted data</li>
+                    <li>Use safe serialization formats (JSON, YAML)</li>
+                    <li>Implement integrity checks (HMAC)</li>
+                    <li>Use allowlists for deserialized classes</li>
+                    <li>Isolate deserialization in low-privilege environments</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

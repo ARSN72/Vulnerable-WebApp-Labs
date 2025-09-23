@@ -1,10 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Login</h2>
+<div class="page-header">
+    <h2>🔐 Login to Lab</h2>
+    <p>Access your cybersecurity learning environment</p>
+</div>
+
 <form action="/login" method="POST">
-    <input type="text" name="username" placeholder="Enter your username" required>
-    <input type="password" name="password" placeholder="Enter your password" required>
-    <button type="submit">Login</button>
+    <div class="form-group">
+        <input type="text" name="username" placeholder="Enter your username" required>
+    </div>
+    <div class="form-group">
+        <input type="password" name="password" placeholder="Enter your password" required>
+    </div>
+    <button type="submit">🚀 Enter Lab</button>
 </form>
+
+<div class="alert alert-warning">
+    <strong>💡 Lab Tip:</strong> Try SQL injection payloads like <code>admin' OR '1'='1' --</code> in the username field!
+</div>
 {% endblock %}

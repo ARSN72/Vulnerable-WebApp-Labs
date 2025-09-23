@@ -1,10 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Create Post</h2>
+<div class="page-header">
+    <h2>✍️ Create New Post</h2>
+    <p>Share your thoughts and test security vulnerabilities</p>
+</div>
+
 <form action="/create-post" method="POST" enctype="multipart/form-data">
-    <textarea name="post_content" placeholder="Write your post here..." required></textarea>
-    <input type="file" name="file">
-    <button type="submit">Post</button>
+    <div class="form-group">
+        <textarea name="post_content" placeholder="Write your post here... Try XSS payloads like &lt;script&gt;alert('XSS')&lt;/script&gt;" required rows="6"></textarea>
+    </div>
+    <div class="form-group">
+        <input type="file" name="file" accept="image/*">
+        <small style="color: #666; font-size: 0.9rem; margin-top: 0.5rem; display: block;">
+            💡 Try uploading different file types to test upload vulnerabilities!
+        </small>
+    </div>
+    <button type="submit">🚀 Publish Post</button>
 </form>
+
+<div class="alert alert-warning">
+    <strong>🎯 Lab Challenge:</strong> Try injecting JavaScript code in your post content to test XSS vulnerabilities!
+</div>
 {% endblock %}

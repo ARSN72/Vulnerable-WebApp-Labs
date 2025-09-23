@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Feed</h2>
+<div class="page-header">
+    <h2>📰 Public Feed</h2>
+    <p>View all posts from the lab community</p>
+</div>
 
 <div class="feed-container">
     {% for post in posts %}
         <div class="post">
             <div class="post-header">
-                <strong>{{ post['username'] }}</strong> 
+                <strong>👤 {{ post['username'] }}</strong> 
                 <span class="timestamp">{{ post['timestamp'] }}</span>
             </div>
-            <p class="post-caption">{{ post['content'] }}</p>
+            <p class="post-caption">{{ post['content'] | safe }}</p>
             {% if post['image'] %}
                 <div class="post-image-container">
                     <img src="{{ url_for('static', filename='uploads/' ~ post['image']) }}" alt="Uploaded Image" class="post-image">
@@ -18,6 +21,19 @@
             {% endif %}
         </div>
     {% endfor %}
+    
+    {% if not posts %}
+        <div class="post">
+            <div class="post-header">
+                <strong>📭 No Posts Yet</strong>
+                <span class="timestamp">Empty Feed</span>
+            </div>
+            <p class="post-caption">Be the first to create a post and start exploring the lab challenges!</p>
+        </div>
+    {% endif %}
 </div>
 
+<div class="alert alert-warning">
+    <strong>🎯 Lab Challenge:</strong> Look for XSS vulnerabilities in post content. Try creating posts with malicious scripts!
+</div>
 {% endblock %}

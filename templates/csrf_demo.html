@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🔄 CSRF (Cross-Site Request Forgery) Demo</h2>
+    <p>Learn how attackers can perform actions on behalf of users without their knowledge</p>
+</div>
+
+<div class="vulnerability-demo">
+    <div class="demo-card">
+        <div class="demo-header">
+            <h3>🎯 CSRF Attack Simulation</h3>
+            <span class="difficulty">Difficulty: ⭐⭐⭐</span>
+        </div>
+        
+        <div class="demo-content">
+            <p><strong>What is CSRF?</strong> CSRF attacks trick users into performing unwanted actions on a web application where they're authenticated.</p>
+            
+            <div class="hint-section">
+                <h4>💡 How CSRF Works:</h4>
+                <ol>
+                    <li>User is logged into a vulnerable website</li>
+                    <li>Attacker tricks user into visiting a malicious site</li>
+                    <li>Malicious site sends requests to the vulnerable site</li>
+                    <li>Vulnerable site processes requests as if user initiated them</li>
+                </ol>
+            </div>
+            
+            <div class="demo-form">
+                <h4>🔧 CSRF Attack Demo</h4>
+                <p>This form has no CSRF protection - it can be submitted from any website!</p>
+                
+                <form action="/csrf-demo" method="POST">
+                    <div class="form-group">
+                        <label for="email">Change Email Address:</label>
+                        <input type="email" name="email" id="email" placeholder="attacker@evil.com" required>
+                    </div>
+                    <button type="submit">🚀 Submit (No CSRF Protection!)</button>
+                </form>
+            </div>
+            
+            <div class="payload-examples">
+                <h4>🔧 CSRF Attack Examples:</h4>
+                <p><strong>Malicious HTML that could be hosted on attacker's site:</strong></p>
+                <code>&lt;form action="http://localhost:5000/csrf-demo" method="POST"&gt;<br>
+                &nbsp;&nbsp;&lt;input type="hidden" name="email" value="hacked@evil.com"&gt;<br>
+                &nbsp;&nbsp;&lt;input type="submit" value="Click for Free Gift!"&gt;<br>
+                &lt;/form&gt;</code>
+                <p><strong>GET-based PoC (works via image/tag or link):</strong></p>
+                <code>&lt;img src="http://localhost:5000/csrf-change-email?email=hacked@evil.com" style="display:none"&gt;</code>
+                <p><a class="btn-edit" href="/csrf-change-email?email=hacked@evil.com">➡️ Click here to trigger CSRF via GET</a></p>
+            </div>
+            
+            <div class="protection-tips">
+                <h4>🛡️ How to Prevent CSRF:</h4>
+                <ul>
+                    <li>Use CSRF tokens in all forms</li>
+                    <li>Validate the Origin header</li>
+                    <li>Use SameSite cookie attribute</li>
+                    <li>Implement double-submit cookies</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

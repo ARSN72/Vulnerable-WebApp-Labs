@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🏃 Race Condition Demo</h2>
+    <p>Learn about timing-based vulnerabilities in concurrent systems</p>
+</div>
+
+<div class="vulnerability-demo">
+    <div class="demo-card">
+        <div class="demo-header">
+            <h3>🎯 Race Condition Attack Simulation</h3>
+            <span class="difficulty">Difficulty: ⭐⭐⭐</span>
+        </div>
+        
+        <div class="demo-content">
+            <p><strong>What is a Race Condition?</strong> Race conditions occur when the outcome depends on the timing of events, often in concurrent systems.</p>
+            
+            <div class="hint-section">
+                <h4>💡 How Race Conditions Work:</h4>
+                <ol>
+                    <li>Multiple processes access shared resource</li>
+                    <li>No proper synchronization/locking</li>
+                    <li>Timing determines the outcome</li>
+                    <li>Attacker exploits timing window</li>
+                </ol>
+            </div>
+            
+            <div class="demo-form">
+                <h4>🔧 Race Condition Demo</h4>
+                <p>This simulates a race condition in account balance updates - try multiple rapid clicks!</p>
+                
+                <form action="/race-condition-demo" method="POST">
+                    <div class="form-group">
+                        <p><strong>Instructions:</strong> Click the button multiple times rapidly to exploit the race condition. You might see:</p>
+                        <ul>
+                            <li>Incorrect balance calculations</li>
+                            <li>Database locking errors</li>
+                            <li>Lost updates from concurrent requests</li>
+                        </ul>
+                    </div>
+                    <button type="submit" class="race-button">💰 Add 10 Points (Race Condition!)</button>
+                </form>
+                
+                <div class="race-condition-info">
+                    <h5>🎯 What to Look For:</h5>
+                    <p>When you click rapidly, you might see:</p>
+                    <ul>
+                        <li><strong>Database Locked Error:</strong> Multiple requests trying to access the database simultaneously</li>
+                        <li><strong>Incorrect Balance:</strong> Balance not increasing by expected amounts</li>
+                        <li><strong>Lost Updates:</strong> Some clicks might not be processed</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="payload-examples">
+                <h4>🔧 Race Condition Examples:</h4>
+                <div class="example-grid">
+                    <div class="example-item">
+                        <strong>Account Balance:</strong><br>
+                        Multiple rapid balance updates<br>
+                        Can lead to incorrect totals
+                    </div>
+                    <div class="example-item">
+                        <strong>File Upload:</strong><br>
+                        Multiple file uploads<br>
+                        Can overwrite each other
+                    </div>
+                    <div class="example-item">
+                        <strong>Session Management:</strong><br>
+                        Multiple session creations<br>
+                        Can cause session confusion
+                    </div>
+                    <div class="example-item">
+                        <strong>Database Updates:</strong><br>
+                        Concurrent record updates<br>
+                        Can cause data corruption
+                    </div>
+                </div>
+            </div>
+            
+            <div class="protection-tips">
+                <h4>🛡️ How to Prevent Race Conditions:</h4>
+                <ul>
+                    <li>Use proper locking mechanisms</li>
+                    <li>Implement atomic operations</li>
+                    <li>Use database transactions</li>
+                    <li>Implement proper synchronization</li>
+                    <li>Use thread-safe data structures</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

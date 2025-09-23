@@ -1,21 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Edit Post</h2>
+<div class="page-header">
+    <h2>✏️ Edit Post</h2>
+    <p>Modify your post content and test vulnerabilities</p>
+</div>
 
-<form method="POST">
-    <label for="content">Edit Post Content:</label>
-    <textarea id="content" name="content">{{ post['content'] }}</textarea>
+<form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="content" style="font-weight: 600; color: #333; margin-bottom: 0.5rem; display: block;">Edit Post Content:</label>
+        <textarea id="content" name="post_content" rows="6" required>{{ post['content'] }}</textarea>
+    </div>
     
     {% if post['image'] %}
-        <p>Current Image:</p>
-        <img src="{{ url_for('static', filename='uploads/' ~ post['image']) }}" class="edit-image">
-        <label><input type="checkbox" name="remove_image"> Remove Image</label>
+        <div class="form-group">
+            <label style="font-weight: 600; color: #333; margin-bottom: 0.5rem; display: block;">Current Image:</label>
+            <img src="{{ url_for('static', filename='uploads/' ~ post['image']) }}" class="edit-image">
+            <label style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+                <input type="checkbox" name="remove_image"> 
+                <span>🗑️ Remove Image</span>
+            </label>
+        </div>
     {% endif %}
     
-    <button type="submit">Update Post</button>
+    <div class="form-group">
+        <label style="font-weight: 600; color: #333; margin-bottom: 0.5rem; display: block;">Upload New Image:</label>
+        <input type="file" name="new_image" accept="image/*">
+    </div>
+    
+    <button type="submit">💾 Update Post</button>
 </form>
 
-<a href="{{ url_for('gallery') }}">Back to Gallery</a>
+<div style="text-align: center; margin-top: 2rem;">
+    <a href="{{ url_for('gallery') }}" class="btn-edit" style="text-decoration: none; display: inline-block;">← Back to Gallery</a>
+</div>
 
+<div class="alert alert-warning">
+    <strong>🎯 Lab Challenge:</strong> Try testing IDOR by accessing other users' posts through URL manipulation!
+</div>
 {% endblock %}

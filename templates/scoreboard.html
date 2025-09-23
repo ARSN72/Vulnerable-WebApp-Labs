@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🏆 Scoreboard & Progress</h2>
+    <p>Track your cybersecurity learning progress and compete with other learners</p>
+</div>
+
+<!-- Current User Progress (if logged in) -->
+{% if current_user_progress and current_user_progress.stats %}
+<div class="user-progress-section">
+    <h3>📊 Your Progress</h3>
+    <div class="progress-dashboard">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-content">
+                    <h3>{{ current_user_progress.stats[0] }}</h3>
+                    <p>Total Points</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔍</div>
+                <div class="stat-content">
+                    <h3>{{ current_user_progress.stats[1] }}</h3>
+                    <p>Vulnerabilities Found</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎖️</div>
+                <div class="stat-content">
+                    <h3>{{ current_user_progress.stats[2] }}</h3>
+                    <p>Achievements Earned</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-content">
+                    <h3>Level {{ current_user_progress.stats[3] }}</h3>
+                    <p>Current Level</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Progress -->
+        <div class="level-progress-section">
+            <h4>Level Progress</h4>
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ (current_user_progress.stats[0] % 100) }}%"></div>
+                </div>
+                <div class="progress-text">
+                    <span>{{ current_user_progress.stats[0] % 100 }}/100 points to Level {{ current_user_progress.stats[3] + 1 }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Achievements -->
+        {% if current_user_progress.achievements %}
+        <div class="achievements-section">
+            <h4>Recent Achievements</h4>
+            <div class="achievements-list">
+                {% for achievement in current_user_progress.achievements %}
+                <div class="achievement-item">
+                    <div class="achievement-icon">🏅</div>
+                    <div class="achievement-content">
+                        <h5>{{ achievement[0].replace('_', ' ').title() }}</h5>
+                        <p>{{ achievement[1] }}</p>
+                        <span class="achievement-points">+{{ achievement[2] }} points</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<div class="scoreboard-container">
+    <!-- Top Users -->
+    <div class="leaderboard-section">
+        <h3>🥇 Top Performers</h3>
+        <div class="leaderboard">
+            {% for user in top_users %}
+            <div class="leaderboard-item {% if loop.index <= 3 %}podium{% endif %}">
+                <div class="rank">
+                    {% if loop.index == 1 %}🥇
+                    {% elif loop.index == 2 %}🥈
+                    {% elif loop.index == 3 %}🥉
+                    {% else %}{{ loop.index }}{% endif %}
+                </div>
+                <div class="user-info">
+                    <div class="username">{{ user[0] }}</div>
+                    <div class="user-stats">
+                        <span>{{ user[1] }} points</span>
+                        <span>•</span>
+                        <span>{{ user[2] }} vulnerabilities</span>
+                        <span>•</span>
+                        <span>{{ user[3] }} achievements</span>
+                    </div>
+                </div>
+                <div class="level-badge">Level {{ user[4] }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Vulnerability Statistics -->
+    {% if vuln_stats %}
+    <div class="vulnerability-stats-section">
+        <h3>📊 Vulnerability Statistics</h3>
+        <div class="vuln-stats-grid">
+            {% for stat in vuln_stats %}
+            <div class="vuln-stat-card">
+                <div class="vuln-name">{{ stat[0].replace('_', ' ').title() }}</div>
+                <div class="vuln-numbers">
+                    <div class="stat-number">{{ stat[1] }}</div>
+                    <div class="stat-label">Total Attempts</div>
+                </div>
+                <div class="vuln-numbers">
+                    <div class="stat-number">{{ stat[2] }}</div>
+                    <div class="stat-label">Unique Users</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Learning Tips -->
+    <div class="learning-tips">
+        <h3>💡 Learning Tips</h3>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <div class="tip-icon">🔍</div>
+                <div class="tip-content">
+                    <h4>Start with SQL Injection</h4>
+                    <p>Try payloads like <code>admin' OR '1'='1' --</code> in the login form</p>
+                </div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-icon">📝</div>
+                <div class="tip-content">
+                    <h4>Test XSS in Posts</h4>
+                    <p>Create posts with <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code></p>
+                </div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-icon">📁</div>
+                <div class="tip-content">
+                    <h4>Upload Malicious Files</h4>
+                    <p>Try uploading files with .php, .jsp, or .exe extensions</p>
+                </div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-icon">🔗</div>
+                <div class="tip-content">
+                    <h4>Test IDOR</h4>
+                    <p>Change post IDs in URLs to access other users' content</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

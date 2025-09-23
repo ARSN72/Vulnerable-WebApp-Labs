@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🔨 Brute Force Attack Demo</h2>
+    <p>Learn about password attacks and the importance of rate limiting</p>
+</div>
+
+<div class="vulnerability-demo">
+    <div class="demo-card">
+        <div class="demo-header">
+            <h3>🎯 Brute Force Attack Simulation</h3>
+            <span class="difficulty">Difficulty: ⭐⭐</span>
+        </div>
+        
+        <div class="demo-content">
+            <p><strong>What is Brute Force?</strong> Brute force attacks try multiple username/password combinations until they find the correct one.</p>
+            
+            <div class="hint-section">
+                <h4>💡 How Brute Force Works:</h4>
+                <ol>
+                    <li>Attacker tries common usernames (admin, user, test)</li>
+                    <li>Uses password lists (123456, password, admin)</li>
+                    <li>Automates the process with tools</li>
+                    <li>Exploits lack of rate limiting</li>
+                </ol>
+            </div>
+            
+            <div class="demo-form">
+                <h4>🔧 Brute Force Demo</h4>
+                <p>This login has no rate limiting - try multiple attempts!</p>
+                
+                <form action="/brute-force-demo" method="POST">
+                    <div class="form-group">
+                        <input type="text" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit">🔓 Try Login (No Rate Limiting!)</button>
+                </form>
+            </div>
+            
+            <div class="payload-examples">
+                <h4>🔧 Common Brute Force Attempts:</h4>
+                <div class="attempt-grid">
+                    <div class="attempt-item">
+                        <strong>Username:</strong> admin<br>
+                        <strong>Password:</strong> admin
+                    </div>
+                    <div class="attempt-item">
+                        <strong>Username:</strong> admin<br>
+                        <strong>Password:</strong> password
+                    </div>
+                    <div class="attempt-item">
+                        <strong>Username:</strong> admin<br>
+                        <strong>Password:</strong> 123456
+                    </div>
+                    <div class="attempt-item">
+                        <strong>Username:</strong> user<br>
+                        <strong>Password:</strong> user
+                    </div>
+                </div>
+            </div>
+            
+            <div class="protection-tips">
+                <h4>🛡️ How to Prevent Brute Force:</h4>
+                <ul>
+                    <li>Implement rate limiting (max 5 attempts per IP)</li>
+                    <li>Use CAPTCHA after failed attempts</li>
+                    <li>Account lockout after multiple failures</li>
+                    <li>Strong password policies</li>
+                    <li>Two-factor authentication (2FA)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

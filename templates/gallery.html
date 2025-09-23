@@ -1,22 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Your Gallery</h2>
+<div class="page-header">
+    <h2>🖼️ Your Gallery</h2>
+    <p>Manage your personal posts and test IDOR vulnerabilities</p>
+</div>
 
-<div class="gallery-container">
+<div class="feed-container">
     {% for post in posts %}
         <div class="gallery-item">
-            <p><strong>{{ post['username'] }}</strong> - {{ post['timestamp'] }}</p>
-            <p>{{ post['content'] }}</p>
+            <div class="post-header">
+                <strong>👤 {{ post['username'] }}</strong>
+                <span class="timestamp">{{ post['timestamp'] }}</span>
+            </div>
+            <p class="post-caption">{{ post['content'] | safe }}</p>
             {% if post['image'] %}
-                <img src="{{ url_for('static', filename='uploads/' ~ post['image']) }}" class="gallery-image">
+                <div class="post-image-container">
+                    <img src="{{ url_for('static', filename='uploads/' ~ post['image']) }}" class="gallery-image">
+                </div>
             {% endif %}
             <div class="gallery-actions">
-                <a href="{{ url_for('edit_post', post_id=post['id']) }}" class="btn-edit">Edit</a>
-                <a href="{{ url_for('delete_post', post_id=post['id']) }}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this post?');">Delete</a>
+                <a href="{{ url_for('edit_post', post_id=post['id']) }}" class="btn-edit">✏️ Edit</a>
+                <a href="{{ url_for('delete_post', post_id=post['id']) }}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this post?');">🗑️ Delete</a>
             </div>
         </div>
     {% endfor %}
+    
+    {% if not posts %}
+        <div class="gallery-item">
+            <div class="post-header">
+                <strong>📭 No Posts Yet</strong>
+                <span class="timestamp">Empty Gallery</span>
+            </div>
+            <p class="post-caption">Create your first post to start building your gallery!</p>
+        </div>
+    {% endif %}
 </div>
 
+<div class="alert alert-warning">
+    <strong>🎯 Lab Challenge:</strong> Try accessing other users' posts by changing the post ID in the URL (IDOR vulnerability)!
+</div>
 {% endblock %}

@@ -1,6 +1,388 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Welcome, {{ username }}</h2>
-<p>Navigate using the header above.</p>
+<div class="dashboard-welcome">
+    <h2>Welcome back, {{ username }}! 👋</h2>
+    <p>Ready to explore the cybersecurity lab challenges? Navigate using the menu above to start learning!</p>
+    
+    {% if progress and progress.stats %}
+    <div class="progress-summary">
+        <div class="progress-stats">
+            <div class="stat-item">
+                <span class="stat-number">{{ progress.stats[0] }}</span>
+                <span class="stat-label">Total Points</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ progress.stats[1] }}</span>
+                <span class="stat-label">Vulnerabilities Found</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ progress.stats[2] }}</span>
+                <span class="stat-label">Achievements</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">Level {{ progress.stats[3] }}</span>
+                <span class="stat-label">Current Level</span>
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="level-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ (progress.stats[0] % 100) }}%"></div>
+            </div>
+            <p class="progress-text">{{ progress.stats[0] % 100 }}/100 points to next level</p>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="alert alert-warning">
+        <strong>⚠️ Lab Notice:</strong> This application contains intentional vulnerabilities for educational purposes. Use responsibly!
+    </div>
+</div>
+
+<div class="page-header">
+    <h2>🎯 Vulnerability Challenges</h2>
+    <p>Master cybersecurity skills through hands-on vulnerability exploitation</p>
+</div>
+
+<div class="challenges-grid">
+    <!-- SQL Injection Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">🔐</div>
+            <div class="challenge-info">
+                <h3>SQL Injection Attack</h3>
+                <span class="difficulty">Difficulty: ⭐⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Bypass authentication using SQL injection</p>
+            <div class="hint-section">
+                <h4>💡 How to Exploit:</h4>
+                <ol>
+                    <li>Go to the <strong>Login</strong> page</li>
+                    <li>In the username field, try: <code>admin' OR '1'='1' --</code></li>
+                    <li>Leave password empty or enter anything</li>
+                    <li>Click login to see the magic!</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 Other Payloads to Try:</h4>
+                <code>' OR 1=1 --</code><br>
+                <code>admin'--</code><br>
+                <code>' UNION SELECT 1,2,3 --</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- XSS Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">📝</div>
+            <div class="challenge-info">
+                <h3>Cross-Site Scripting (XSS)</h3>
+                <span class="difficulty">Difficulty: ⭐⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Execute malicious JavaScript in post content</p>
+            <div class="hint-section">
+                <h4>💡 How to Exploit:</h4>
+                <ol>
+                    <li>Go to <strong>Create Post</strong></li>
+                    <li>In the post content, enter: <code>&lt;script&gt;alert('XSS Vulnerability!')&lt;/script&gt;</code></li>
+                    <li>Submit the post</li>
+                    <li>View the post in the <strong>Feed</strong> to see the alert</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 Other Payloads to Try:</h4>
+                <code>&lt;img src=x onerror=alert('XSS')&gt;</code><br>
+                <code>&lt;svg onload=alert('XSS')&gt;&lt;/svg&gt;</code><br>
+                <code>javascript:alert('XSS')</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Upload Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">📁</div>
+            <div class="challenge-info">
+                <h3>File Upload Vulnerability</h3>
+                <span class="difficulty">Difficulty: ⭐⭐⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Upload malicious files to test upload security</p>
+            <div class="hint-section">
+                <h4>💡 How to Exploit:</h4>
+                <ol>
+                    <li>Create a text file with: <code>&lt;?php echo "File Upload Success!"; ?&gt;</code></li>
+                    <li>Save it as <code>test.php</code></li>
+                    <li>Go to <strong>Create Post</strong> and upload this file</li>
+                    <li>Check if the file was accepted despite being PHP</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 Other File Types to Try:</h4>
+                <code>malicious.jsp</code><br>
+                <code>shell.asp</code><br>
+                <code>backdoor.exe</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- IDOR Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">🔓</div>
+            <div class="challenge-info">
+                <h3>Insecure Direct Object Reference (IDOR)</h3>
+                <span class="difficulty">Difficulty: ⭐⭐⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Access other users' posts by manipulating URLs</p>
+            <div class="hint-section">
+                <h4>💡 How to Exploit:</h4>
+                <ol>
+                    <li>Create a post and note its ID from the URL</li>
+                    <li>Logout and create another account</li>
+                    <li>Try accessing: <code>/edit-post/1</code> (change the number)</li>
+                    <li>See if you can edit other users' posts</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 URLs to Test:</h4>
+                <code>/edit-post/1</code><br>
+                <code>/edit-post/2</code><br>
+                <code>/delete-post/1</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session Management Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">🍪</div>
+            <div class="challenge-info">
+                <h3>Session Management Flaws</h3>
+                <span class="difficulty">Difficulty: ⭐⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Analyze session security and token management</p>
+            <div class="hint-section">
+                <h4>💡 How to Analyze:</h4>
+                <ol>
+                    <li>Login and open browser Developer Tools (F12)</li>
+                    <li>Go to <strong>Application/Storage</strong> → <strong>Cookies</strong></li>
+                    <li>Examine the session cookie values</li>
+                    <li>Look for predictable or weak session tokens</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 What to Look For:</h4>
+                Sequential session IDs<br>
+                Predictable patterns<br>
+                Weak encryption
+            </div>
+        </div>
+    </div>
+
+    <!-- Information Disclosure Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">📋</div>
+            <div class="challenge-info">
+                <h3>Information Disclosure</h3>
+                <span class="difficulty">Difficulty: ⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Find sensitive information exposure</p>
+            <div class="hint-section">
+                <h4>💡 How to Find:</h4>
+                <ol>
+                    <li>Try accessing non-existent pages like <code>/nonexistent</code></li>
+                    <li>Look for detailed error messages</li>
+                    <li>Check if debug mode is enabled</li>
+                    <li>Examine HTTP response headers</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 Pages to Test:</h4>
+                <code>/admin</code><br>
+                <code>/debug</code><br>
+                <code>/test</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- CSRF Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">🔄</div>
+            <div class="challenge-info">
+                <h3>CSRF Attack</h3>
+                <span class="difficulty">Difficulty: ⭐⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Perform actions on behalf of users without their knowledge</p>
+            <div class="hint-section">
+                <h4>💡 How to Exploit:</h4>
+                <ol>
+                    <li>Go to <strong>CSRF Demo</strong> page</li>
+                    <li>Submit the form to change email</li>
+                    <li>Notice no CSRF token validation</li>
+                    <li>Create malicious HTML form</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 Attack Method:</h4>
+                <a href="/csrf-demo" class="btn-edit">🔄 Try CSRF Demo</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Brute Force Challenge removed: replaced by AI Chatbot button in header/footer -->
+
+    <!-- Clickjacking Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">🖱️</div>
+            <div class="challenge-info">
+                <h3>Clickjacking Attack</h3>
+                <span class="difficulty">Difficulty: ⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Trick users into clicking hidden elements</p>
+            <div class="hint-section">
+                <h4>💡 How to Exploit:</h4>
+                <ol>
+                    <li>Go to <strong>Clickjacking Demo</strong> page</li>
+                    <li>See how iframe can be overlaid</li>
+                    <li>Notice missing X-Frame-Options header</li>
+                    <li>Create malicious overlay</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 Attack Method:</h4>
+                <a href="/clickjacking-demo" class="btn-edit">🖱️ Try Clickjacking Demo</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SSRF Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">🌐</div>
+            <div class="challenge-info">
+                <h3>SSRF Attack</h3>
+                <span class="difficulty">Difficulty: ⭐⭐⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Make server request internal resources</p>
+            <div class="hint-section">
+                <h4>💡 How to Exploit:</h4>
+                <ol>
+                    <li>Go to <strong>SSRF Demo</strong> page</li>
+                    <li>Try internal URLs like <code>http://localhost:22</code></li>
+                    <li>Test cloud metadata endpoints</li>
+                    <li>Attempt file:// protocol</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 Attack Method:</h4>
+                <a href="/ssrf-demo" class="btn-edit">🌐 Try SSRF Demo</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- XXE Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">📄</div>
+            <div class="challenge-info">
+                <h3>XXE Attack</h3>
+                <span class="difficulty">Difficulty: ⭐⭐⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Exploit XML parsing to read files or make requests</p>
+            <div class="hint-section">
+                <h4>💡 How to Exploit:</h4>
+                <ol>
+                    <li>Go to <strong>XXE Demo</strong> page</li>
+                    <li>Use external entity declarations</li>
+                    <li>Try file:// protocol for file reading</li>
+                    <li>Test out-of-band requests</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 Attack Method:</h4>
+                <a href="/xxe-demo" class="btn-edit">📄 Try XXE Demo</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deserialization Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">🔓</div>
+            <div class="challenge-info">
+                <h3>Insecure Deserialization</h3>
+                <span class="difficulty">Difficulty: ⭐⭐⭐⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Execute code through deserialization</p>
+            <div class="hint-section">
+                <h4>💡 How to Exploit:</h4>
+                <ol>
+                    <li>Go to <strong>Deserialization Demo</strong> page</li>
+                    <li>Use provided base64 payloads</li>
+                    <li>Try code execution payloads</li>
+                    <li>Test file reading capabilities</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 Attack Method:</h4>
+                <a href="/deserialization-demo" class="btn-edit">🔓 Try Deserialization Demo</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Race Condition Challenge -->
+    <div class="challenge-card">
+        <div class="challenge-header">
+            <div class="challenge-icon">🏃</div>
+            <div class="challenge-info">
+                <h3>Race Condition</h3>
+                <span class="difficulty">Difficulty: ⭐⭐⭐</span>
+            </div>
+        </div>
+        <div class="challenge-content">
+            <p><strong>Objective:</strong> Exploit timing-based vulnerabilities</p>
+            <div class="hint-section">
+                <h4>💡 How to Exploit:</h4>
+                <ol>
+                    <li>Go to <strong>Race Condition Demo</strong> page</li>
+                    <li>Click the button multiple times rapidly</li>
+                    <li>Notice how balance updates incorrectly</li>
+                    <li>Exploit the timing window</li>
+                </ol>
+            </div>
+            <div class="payload-examples">
+                <h4>🔧 Attack Method:</h4>
+                <a href="/race-condition-demo" class="btn-edit">🏃 Try Race Condition Demo</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

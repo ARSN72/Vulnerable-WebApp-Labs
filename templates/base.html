@@ -3,35 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vulnerable Web App</title>
+    <title>🛡️ Vulnerable Web App Labs</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header>
-    <h2>Vulnerable Web App</h2>
+    <h2>🛡️ Vulnerable Web App Labs</h2>
     <ul class="nav-links">
         {% if 'user_id' in session %}
-            <li><a href="/dashboard">Dashboard</a></li>
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/gallery">Gallery</a></li>
-            <li><a href="/feed">Feed</a></li>
-            <li><a href="/create-post">Create Post</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href="/dashboard">🏠 Dashboard</a></li>
+            <li><a href="/scoreboard">🏆 Scoreboard</a></li>
+            <li><a href="/profile">👤 Profile</a></li>
+            <li><a href="/gallery">🖼️ Gallery</a></li>
+            <li><a href="/feed">📰 Feed</a></li>
+            <li><a href="/create-post">✍️ Create Post</a></li>
+            <li><a href="/logout">🚪 Logout</a></li>
         {% else %}
-            <li><a href="/login">Login</a></li>
-            <li><a href="/signup">Signup</a></li>
-            <li><a href="/feed">Feed</a></li>
+            <li><a href="/login">🔐 Login</a></li>
+            <li><a href="/signup">📝 Signup</a></li>
+            <li><a href="/feed">📰 Feed</a></li>
+            <li><a href="/scoreboard">🏆 Scoreboard</a></li>
         {% endif %}
     </ul>
 </header>
 
-<div class="container">
-    {% block content %}{% endblock %}
-</div>
+<main>
+    <div class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'achievements' %}
+                        <div class="alert alert-success">
+                            <strong>🎉 Achievement Unlocked!</strong><br>
+                            {% for achievement in message %}
+                                {{ achievement }}<br>
+                            {% endfor %}
+                        </div>
+                    {% elif category == 'success' %}
+                        <div class="alert alert-success">
+                            <strong>✅ Success!</strong> {{ message }}
+                        </div>
+                    {% elif category == 'error' %}
+                        <div class="alert alert-danger">
+                            <strong>❌ Error!</strong> {{ message }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+    
+    <!-- AI Chatbot Floating Button -->
+    <button id="ai-chatbot-btn" style="position: fixed; right: 20px; bottom: 20px; z-index: 1000; padding: 12px 16px; border-radius: 999px; background: #6b4ce6; color: white; border: none; box-shadow: 0 6px 18px rgba(0,0,0,0.2); cursor: pointer;">
+        🤖 AI Chatbot
+    </button>
+
+    <!-- AI Chatbot Popup -->
+    <div id="ai-chatbot-popup" style="display:none; position: fixed; right: 20px; bottom: 80px; width: 360px; max-width: 90vw; background: #0f1220; color: #eaeaf2; border: 1px solid #2a2d3c; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); z-index: 1001;">
+        <div style="padding: 12px 14px; border-bottom: 1px solid #2a2d3c; display:flex; align-items:center; justify-content: space-between;">
+            <div style="font-weight: 600;">🤖 AI Security Assistant</div>
+            <button id="ai-chatbot-close" style="background: transparent; color: #eaeaf2; border: none; font-size: 18px; cursor: pointer;">✖</button>
+        </div>
+        <div style="padding: 14px; font-size: 14px; line-height: 1.5;">
+            <p><strong>Challenge:</strong> This chatbot is intentionally vulnerable.</p>
+            <ul style="margin: 8px 0 12px 18px;">
+                <li><strong>HTML Injection:</strong> User messages render without sanitization. Inject HTML.</li>
+                <li><strong>Brute Force via Bot:</strong> Try rapid prompts to guess hidden keys and reveal <em>critical database info</em>.</li>
+            </ul>
+            <div class="alert alert-warning">Tip: Try inputs like <code>&lt;img src=x onerror=alert('HTML Injection')&gt;</code> or iterate guesses such as <code>api_key=0000</code>..</div>
+            <div id="ai-chat-log" style="height: 160px; overflow-y: auto; background:#14182b; border:1px solid #2a2d3c; border-radius:8px; padding:8px; margin-bottom:10px;"></div>
+            <form id="ai-chat-form" onsubmit="return false;" style="display:flex; gap:6px;">
+                <input id="ai-chat-input" type="text" placeholder="Type a message..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #2a2d3c; background:#0f1220; color:#eaeaf2;" />
+                <button id="ai-chat-send" style="padding:10px 14px; border-radius:8px; border:none; background:#6b4ce6; color:white; cursor:pointer;">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        var btn = document.getElementById('ai-chatbot-btn');
+        var popup = document.getElementById('ai-chatbot-popup');
+        var closeBtn = document.getElementById('ai-chatbot-close');
+        var log = document.getElementById('ai-chat-log');
+        var form = document.getElementById('ai-chat-form');
+        var input = document.getElementById('ai-chat-input');
+
+        if(btn){ btn.addEventListener('click', function(){ popup.style.display = 'block'; }); }
+        if(closeBtn){ closeBtn.addEventListener('click', function(){ popup.style.display = 'none'; }); }
+        if(form){
+            form.addEventListener('submit', function(){
+                var msg = input.value || '';
+                // Intentionally unsafe: render user input directly (HTML Injection demo)
+                var userBubble = document.createElement('div');
+                userBubble.style.margin = '6px 0';
+                userBubble.innerHTML = '<div style="background:#1f2440; padding:8px 10px; border-radius:8px;">' + msg + '</div>';
+                log.appendChild(userBubble);
+                log.scrollTop = log.scrollHeight;
+
+                // Helper to append bot message (allows HTML rendering from server responses)
+                function botSay(html, isHtml){
+                    var botBubble = document.createElement('div');
+                    botBubble.style.margin = '6px 0';
+                    var inner = document.createElement('div');
+                    inner.style.background = '#22284a';
+                    inner.style.padding = '8px 10px';
+                    inner.style.borderRadius = '8px';
+                    if(isHtml){ inner.innerHTML = html; } else { inner.textContent = html; }
+                    botBubble.appendChild(inner);
+                    log.appendChild(botBubble);
+                    log.scrollTop = log.scrollHeight;
+                }
+
+                // Simulated typing delay
+                botSay('Bot: Processing...', false);
+
+                // Command routing for vulnerabilities
+                var lower = msg.toLowerCase();
+                var m;
+                // 1) Brute-force style hint via api_key
+                if((m = msg.match(/api_key=([0-9]{4})/))){
+                    var guess = m[1];
+                    setTimeout(function(){
+                        if(guess === '1337'){
+                            botSay('Bot: Access granted. DB creds: <code>user=admin</code>, <code>pass=admin123</code>, <code>file=database.db</code>', true);
+                        } else {
+                            botSay('Bot: Invalid key '+guess+'. Hint: try leetspeak like 1337.', false);
+                        }
+                    }, 300);
+
+                // 2) SSRF: "ssrf: <url>"
+                } else if((m = msg.match(/^\s*ssrf:\s*(.+)$/i))){
+                    var url = m[1].trim();
+                    fetch('/ssrf-demo', { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: 'url='+encodeURIComponent(url) })
+                        .then(r => r.text())
+                        .then(html => botSay('Bot SSRF Response:\n' + html, true))
+                        .catch(e => botSay('Bot SSRF Error: '+e, false));
+
+                // 3) XXE: "xxe: <xml>"
+                } else if((m = msg.match(/^\s*xxe:\s*([\s\S]+)$/i))){
+                    var xml = m[1];
+                    fetch('/xxe-demo', { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: 'xml_data='+encodeURIComponent(xml) })
+                        .then(r => r.text())
+                        .then(html => botSay('Bot XXE Response:\n' + html, true))
+                        .catch(e => botSay('Bot XXE Error: '+e, false));
+
+                // 4) Insecure Deserialization: "deserialize: <base64>"
+                } else if((m = msg.match(/^\s*deserialize:\s*(.+)$/i))){
+                    var b64 = m[1].trim();
+                    fetch('/deserialization-demo', { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: 'serialized_data='+encodeURIComponent(b64) })
+                        .then(r => r.text())
+                        .then(html => botSay('Bot Deserialization Response:\n' + html, true))
+                        .catch(e => botSay('Bot Deserialization Error: '+e, false));
+
+                // 5) CSRF: "csrf: email@example.com"
+                } else if((m = msg.match(/^\s*csrf:\s*([^\s]+@[^\s]+)$/i))){
+                    var email = m[1];
+                    fetch('/csrf-change-email?email='+encodeURIComponent(email))
+                        .then(r => r.text())
+                        .then(html => botSay('Bot CSRF Triggered. Response:\n' + html, true))
+                        .catch(e => botSay('Bot CSRF Error: '+e, false));
+
+                // 6) Help
+                } else if(/\b(help|hint|commands|what can you do)\b/i.test(lower)){
+                    botSay('Bot: Try commands:<br> - ssrf: http://example.com<br> - ssrf: file:///etc/hosts<br> - xxe: &lt;xml&gt;...&lt;/xml&gt;<br> - deserialize: &lt;base64&gt;<br> - csrf: victim@site.tld<br> - api_key=0000..9999', true);
+
+                // 7) Normal conversation and cybersecurity FAQ
+                } else {
+                    var smallTalk = [
+                        { p: /\b(hi|hello|hey|yo|hiya)\b/i, r: 'Bot: Hello! How can I help you practice today?' },
+                        { p: /how'?s? it going|how are you|how're you/i, r: "Bot: I’m great and ready to help you learn securely!" },
+                        { p: /thank(s| you)/i, r: 'Bot: You’re welcome! Want tips on XSS or SQLi?' },
+                        { p: /bye|goodbye|see ya|cya/i, r: 'Bot: Bye! Come back to explore more vulnerabilities.' },
+                    ];
+
+                    // Lightweight cybersecurity knowledge base with fuzzy matching
+                    var kb = [
+                        { k: ['sql injection','sqli','union select','or 1=1','authentication bypass'], a: "Bot: SQL Injection lets attackers modify queries via input. In this lab, try login username: <code>admin' OR '1'='1' -- </code>." },
+                        { k: ['xss','cross site scripting','script tag','onerror','alert'], a: "Bot: XSS injects JavaScript into pages. Try in a post: <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> or <code>&lt;img src=x onerror=alert(1)&gt;</code>." },
+                        { k: ['csrf','cross site request forgery','forgery','samesite'], a: "Bot: CSRF makes the browser perform unintended actions. In this lab, GET PoC: <code>/csrf-change-email?email=hacked@evil.com</code> while logged in." },
+                        { k: ['idor','insecure direct object','object reference','authorization bypass'], a: "Bot: IDOR is missing authorization checks on object IDs. Try editing another user’s post via <code>/edit-post/&lt;id&gt;</code>." },
+                        { k: ['ssrf','server-side request forgery','fetch internal','file scheme'], a: "Bot: SSRF causes the server to fetch URLs. You can try: <code>ssrf: http://example.com</code> or <code>ssrf: file:///C:/Windows/System32/drivers/etc/hosts</code>." },
+                        { k: ['xxe','xml external entity','external entity','dtd'], a: "Bot: XXE abuses XML entity resolution to read files or make requests. Send an XML payload using the <code>xxe:</code> command." },
+                        { k: ['deserialization','pickle','insecure deserialization','base64'], a: "Bot: Insecure deserialization executes or loads untrusted objects. Use <code>deserialize: &lt;base64&gt;</code> with a Windows-safe pickle payload." },
+                        { k: ['brute force','password guessing','rate limiting'], a: "Bot: Brute forcing tries many credentials or keys. In the chatbot, guess <code>api_key=0000..9999</code>; 1337 reveals mock DB creds." },
+                        { k: ['clickjacking','frame','iframe','x-frame-options'], a: "Bot: Clickjacking overlays iframes to hijack clicks. See the demo at <code>/clickjacking-demo</code>." },
+                        { k: ['security headers','csp','hsts','x content type'], a: "Bot: Missing security headers enables attacks like XSS/clickjacking. Check response headers with DevTools." },
+                        { k: ['session','cookie','session hijacking','secret key'], a: "Bot: Session flaws include weak secrets and predictable tokens. Inspect cookies and note the hardcoded secret key in the app." },
+                        { k: ['password hashing','plaintext password','hash'], a: "Bot: Passwords must be hashed. This lab stores plaintext passwords to demonstrate the risk—verify in the <code>users</code> table." },
+                        { k: ['file upload','upload attack','content type','extension'], a: "Bot: File upload flaws allow dangerous files. Try uploading unexpected types in Create Post and see acceptance behavior." },
+                        { k: ['race condition','concurrency','database locked'], a: "Bot: Race conditions appear under concurrent actions. Rapidly trigger <code>/race-condition-demo</code> to see inconsistent balance updates." },
+                    ];
+
+                    function matchList(list){
+                        for(var i=0;i<list.length;i++){
+                            if(list[i].p && list[i].p.test(msg)) return list[i].r;
+                        }
+                        return null;
+                    }
+
+                    function getCyberAnswer(text){
+                        var t = text.toLowerCase();
+                        var best = null, bestScore = 0;
+                        for(var i=0;i<kb.length;i++){
+                            var entry = kb[i];
+                            var score = 0;
+                            for(var j=0;j<entry.k.length;j++){
+                                var kw = entry.k[j].toLowerCase();
+                                if(t.indexOf(kw) !== -1) score += kw.split(/\s+/).length;
+                            }
+                            if(score > bestScore){ bestScore = score; best = entry; }
+                        }
+                        if(best && bestScore > 0){ return best.a; }
+                        // keyword fallback for common phrasings
+                        if(/what is|explain|define|how does|how to/i.test(text)){
+                            return "Bot: I’m not sure yet. Ask about SQL Injection, XSS, CSRF, IDOR, SSRF, XXE, Deserialization, Clickjacking, Security Headers, Sessions, or Brute Force.";
+                        }
+                        return null;
+                    }
+
+                    var ans = matchList(smallTalk) || getCyberAnswer(msg);
+                    if(ans){
+                        botSay(ans, true);
+                    } else {
+                        botSay("Bot: Sorry, I don’t know that yet. Type 'help' for commands or ask about a security topic like 'What is XSS?'.", false);
+                    }
+                }
+
+                input.value = '';
+            });
+        }
+    })();
+    </script>
+</main>
 
 <footer>
-    <p>2025 Vulnerable Web App © Cyber Allegiance Project</p>
+    <p>🛡️ 2025 Vulnerable Web App Labs © Cybersecurity Learning Platform</p>
 </footer>
 
 </body>

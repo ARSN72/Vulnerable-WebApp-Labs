@@ -43,7 +43,7 @@ This lab is designed to teach you:
 
 ### Pages and Routes
 - `/` - Home page (redirects to dashboard or login)
-- `/login` - User login
+- `/login` - User login (intentionally SQLi-vulnerable)
 - `/signup` - User registration
 - `/dashboard` - User dashboard
 - `/profile` - User profile management
@@ -51,8 +51,17 @@ This lab is designed to teach you:
 - `/create-post` - Create new posts with images
 - `/feed` - Public feed showing all posts
 - `/gallery` - Personal gallery of user's posts
-- `/edit-post/<id>` - Edit existing posts
+- `/edit-post/<id>` - Edit existing posts (ownership check removed for IDOR demo)
 - `/delete-post/<id>` - Delete posts
+- `/admin` - Information disclosure (secrets, env, DB users)
+- `/debug` - Information disclosure (request/session/config)
+- `/test` - Information disclosure (packages, requirements, file listing, source)
+- `/csrf-demo` - CSRF form demo (no token)
+- `/csrf-change-email?email=...` - GET CSRF variant for easy PoC
+- `/ssrf-demo` - SSRF demo; supports http/https and file://
+- `/xxe-demo` - XXE unsafe XML parsing
+- `/deserialization-demo` - Pickle/base64 insecure deserialization
+- `/race-condition-demo` - Race condition demo
 
 ## 🎯 Lab Challenges & Vulnerabilities
 
@@ -319,15 +328,15 @@ This lab contains **14 intentional vulnerabilities** designed to teach specific 
 **Objective**: Find sensitive information exposure
 
 **Steps**:
-1. Try to access non-existent pages (e.g., `/nonexistent`)
-2. Look for detailed error messages
-3. Check if debug mode is enabled
-4. **Expected Result**: Detailed error information should be visible
+1. Visit new disclosure pages: `/admin`, `/debug`, `/test`
+2. Trigger errors or review debug output
+3. Inspect responses for secrets, plaintext passwords, env vars
+4. **Expected Result**: Sensitive details are exposed intentionally
 
 **Learning Points**:
 - Information disclosure risks
-- Error handling security
-- Debug mode dangers
+- Error handling and debug mode dangers
+- Impact of leaking secrets and configs
 
 ### Challenge 8: Security Headers Analysis
 **Objective**: Identify missing security headers
